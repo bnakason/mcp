@@ -575,8 +575,9 @@ Replace `<published-version>` with the version you released.
 
 Reusable agent workflows live under `skills/`. The
 [Publisher Artifact Creator](skills/publisher-create-artifact/SKILL.md) asks for an
-image OCID, verifies whether it identifies a Compute or Container Registry image,
-and creates the matching artifact through the Marketplace Publisher Console. It
+source OCID, registry reference, or configuration package, verifies Compute images,
+container images, Helm charts, and Terraform stacks, and creates the matching
+artifact through the Marketplace Publisher Console. It
 then recommends an OCI Application Listing package type and reminds the publisher
 to create a term and term version.
 
