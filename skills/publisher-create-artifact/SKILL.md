@@ -71,6 +71,8 @@ Always include this reminder, adapted when a suitable term already exists:
 
 “Remember to create a term and term version with your terms-of-use document in Marketplace Publisher (or reuse an appropriate existing term). You will need to select the terms of use alongside this artifact in the OCI Application Listing's app install package.”
 
+For artifacts backed by a source image, always also remind the publisher: “Do not delete the source image used by this artifact. Keep it available while the artifact or any associated listing depends on it.” Identify the source image by name and OCID when verified, so the publisher can distinguish it from the Publisher artifact. Include this reminder even when artifact processing is still pending. For Helm charts and Terraform stacks, adapt the reminder to preserve the referenced source chart or stack/configuration rather than referring to an image that does not exist.
+
 If processing is pending, make the recommendation conditional on the artifact becoming Available. Provide guidance; create a listing or term only when separately requested.
 
 ## Authoritative references
