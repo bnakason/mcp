@@ -574,12 +574,15 @@ Replace `<published-version>` with the version you released.
 ## Agent skills
 
 Reusable agent workflows live under `skills/`. The
-[Publisher Artifact Creator](skills/publisher-create-artifact/SKILL.md) asks for an
+[Publisher Artifact Creator](skills/publisher-create-artifact/SKILL.md) asks for a
 source OCID, registry reference, or configuration package, verifies Compute images,
 container images, Helm charts, and Terraform stacks, and creates the matching
 artifact through the Marketplace Publisher Console. It
 then recommends an OCI Application Listing package type and reminds the publisher
-to create a term and term version.
+to create a term and term version. The artifact destination is automatically Ashburn
+(`us-ashburn-1`); the skill does not ask the publisher for a region. Compute image
+sources must have a Phoenix (`phx`) or Ashburn (`iad`) image OCID; otherwise the
+skill requests a different image OCID.
 
 For Codex, copy `skills/publisher-create-artifact` into your personal skills
 directory (`$CODEX_HOME/skills`, or `~/.codex/skills` when `CODEX_HOME` is unset),
