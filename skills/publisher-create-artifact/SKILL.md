@@ -1,11 +1,21 @@
 ---
 name: publisher-create-artifact
-description: Create Marketplace Publisher artifacts from Compute images, container images, Helm charts, or Terraform stacks/configuration through the OCI Console. Use for artifact creation or preparation, not consumer launches or listing publication.
+description: Create Marketplace Publisher artifacts in Ashburn (us-ashburn-1) from Compute images, container images, Helm charts, or Terraform stacks/configuration through the OCI Console. Use for artifact creation or preparation, not consumer launches or listing publication.
 ---
 
 # Publisher Artifact Creator
 
 Create an artifact through the Marketplace Publisher UI using information supplied by the publisher. Finish with a listing recommendation and a terms reminder. Invoking this skill for advice or a preview does not authorize creating a live resource.
+
+## Use Ashburn automatically
+
+Always set the artifact destination to **Ashburn (`us-ashburn-1`)**, in both staging and production. Do not ask the publisher to supply or confirm a region. This is a restriction of this skill, not a claim about Marketplace service availability. If the publisher explicitly requests creation elsewhere, explain that this skill creates artifacts only in Ashburn; do not create in another region.
+
+Select Ashburn in the Console automatically and verify the selection before preparing or submitting the artifact. Do not inherit a different destination from a profile default or supplied Console link. If Ashburn cannot be selected or verified, report the access/Console blocker without asking for a region.
+
+For Compute image sources, accept only image OCIDs with region segment `phx` (Phoenix, `us-phoenix-1`) or `iad` (Ashburn, `us-ashburn-1`). If a supplied Compute image OCID has another or missing region segment, stop and respond: “Please provide a different Compute image OCID from Phoenix (phx) or Ashburn (iad). This skill creates the artifact in Ashburn (us-ashburn-1).” Never copy, relocate, or substitute an image. An allowed segment only passes this intake check; verify the exact image's identity, region, access, state, and publication eligibility using authenticated metadata.
+
+Distinguish the source region from the artifact destination. Read a Phoenix image's metadata in `us-phoenix-1` and an Ashburn image's metadata in `us-ashburn-1`, using an explicit CLI `--region` when applicable. Artifact preparation and creation remain in Ashburn for either source. A Phoenix source is not rejected merely because the destination is Ashburn; confirm the live Publisher form accepts the exact source. If it does not, report that limitation and request a different eligible Phoenix or Ashburn image OCID without copying or silently changing the source. Do not apply the Compute image OCID rule to Publisher account/artifact OCIDs or unrelated resource types.
 
 ## Collect missing inputs
 
@@ -19,7 +29,7 @@ Reuse the conversation and authenticated Console context. Route from the supplie
 
 In Marketplace Publisher, “stack” and “Terraform stack” map to the same **Terraform Stack** artifact type (`STACK`); Terraform files are source material, not a separate artifact enum. Verify the actual source rather than relying only on the publisher's label.
 
-Resolve the intended tenancy/publisher account, region, destination artifact compartment, and artifact name. Ask only for values that cannot be unambiguously resolved. The source resource compartment can differ from the artifact compartment. You may propose a name from the verified source name and publisher-provided version; do not invent product or version information. Never request passwords, private keys, or session tokens in chat.
+Resolve the intended tenancy/publisher account, destination artifact compartment, and artifact name; set the artifact destination region to `us-ashburn-1` automatically. Ask only for values that cannot be unambiguously resolved. The source resource compartment can differ from the artifact compartment. You may propose a name from the verified source name and publisher-provided version; do not invent product or version information. Never request passwords, private keys, or session tokens in chat.
 
 ## Identify and verify the source
 
@@ -47,9 +57,9 @@ For any Helm or Terraform archive, prefer listing members and selectively readin
 
 Prefer available read-only OCI tools for metadata; otherwise use Console resource details and pickers. The selected source reference lists applicable read-only OCI CLI commands. Before first use, check command help, the installed version, and selected region. Reuse that help within the task unless the command/version changes or an error requires clarification. Create the artifact through the UI for this workflow.
 
-Before using CLI evidence, verify the effective profile's tenancy, requested region, and exact resource OCID/reference against the intended Console workflow and source context. Profile names or credentials need not be identical, and the source compartment can differ from the destination artifact compartment. If the actual contexts or resource identity conflict, stop and resolve the discrepancy before continuing; do not mix evidence across accounts, silently switch profiles, or expose credentials.
+Before using CLI evidence, verify the effective profile's tenancy, explicit source region, and exact resource OCID/reference against the intended source context and Console workflow. A verified Phoenix Compute source lookup alongside an Ashburn artifact destination is allowed by the region rules above. Profile names or credentials need not be identical, and the source compartment can differ from the destination artifact compartment. If the actual contexts or resource identity conflict, stop and resolve the discrepancy before continuing; do not mix evidence across accounts, silently switch profiles, or expose credentials.
 
-If the resource is a boot volume, instance, existing Publisher artifact OCID, or another unsupported kind, explain the mismatch and ask for the appropriate source. Do not silently convert resources or switch types. If metadata cannot be accessed, ask for the correct region/account or required access; do not mistake lack of access for proof that a source does not exist.
+If the resource is a boot volume, instance, existing Publisher artifact OCID, or another unsupported kind, explain the mismatch and ask for the appropriate source. Do not silently convert resources or switch types. If metadata cannot be accessed, ask for the correct source/account or required access, without asking for a destination region; do not mistake lack of access for proof that a source does not exist.
 
 ## Keep evidence focused
 
@@ -63,7 +73,7 @@ Use focused browser observations only through supported browser APIs. Retain eno
 
 Use the available browser/computer-use tool and follow its interaction instructions. Inspect the live UI instead of relying on fixed coordinates, guessed URLs, or hidden browser endpoints. If authenticated UI access is unavailable, preserve the collected inputs and explain the access needed. A filled form is not proof of creation.
 
-1. Navigate to **Marketplace → Publisher → Artifacts**. Check the tenancy, publisher, region, and destination artifact compartment against the request.
+1. Navigate to **Marketplace → Publisher → Artifacts** in **Ashburn (`us-ashburn-1`)**. Check the tenancy, publisher, and destination artifact compartment against the request; select and verify the automatic Ashburn destination above before continuing.
 2. Look for an existing artifact of the intended type referencing the same source resource and version/digest (or configuration package) in the intended publisher/compartment. Use supported publisher, compartment, type, and source filters where available. Retain compact candidate summaries with artifact IDs, source references/version or digest, and statuses; inspect candidate details to establish an exact match rather than dumping the full inventory. A shared name is insufficient. Check every relevant result page and filter within that scope before claiming no match; do not reduce coverage to save output. If inventory is incomplete, report that limitation rather than claiming no artifact exists. A list precheck does not guarantee protection against concurrent creation.
    - If an exact existing match satisfies the request, reuse it, disclose that it already existed, and skip steps 3–6. Continue at step 7 to inspect its current status and provide next steps.
    - If a matching artifact is pending or failed, skip steps 3–6 and continue at step 7 to report its state, processing details, or errors. Do not call it ready or silently create a replacement. A replacement requires an explicit request.
@@ -71,7 +81,7 @@ Use the available browser/computer-use tool and follow its interaction instructi
 3. Choose **Create artifact**. Enter the supplied/resolved name, destination compartment, and verified artifact type.
 4. Select or enter the exact source using the live form and the selected reference's **Fill the artifact form** section. Reuse verified source facts, refresh mutable state, and confirm the final selected resource/version or uploaded package. Do not load unrelated source guidance for this step.
 5. Ask for required fields whose values remain unknown. Never invent values or select a mandatory guidelines/compliance attestation without supporting evidence or the publisher's confirmation that it is true. If confirmation is needed, prepare the reviewable form first and ask specifically about the attestation.
-6. Check the final form against the source OCID/reference or uploaded package, version/digest, type, name, publisher, region, and destination compartment. If the publisher requested creation, submit **Create artifact** without redundant permission. If they requested preparation/preview only, leave the completed form for review.
+6. Check the final form against the source OCID/reference or uploaded package, version/digest, type, name, publisher, and destination compartment. Confirm the selected region is **Ashburn (`us-ashburn-1`)**; stop if it differs or cannot be verified. If the publisher requested creation, submit **Create artifact** without redundant permission. If they requested preparation/preview only, leave the completed form for review.
 7. Open the created or reused artifact's details. Record the artifact OCID, name, type, source reference/version or configuration package, compartment, region, Console link, and observed status. Inspect any work request and validation/publication status shown. Distinguish created from ready for a listing: the artifact must be **Available**, with publication **Complete**, to be used for a listing.
 
 Creation can be asynchronous. Poll with bounded waits and backoff (for example, 10, 20, 40, then at most 60 seconds between checks, respecting tool limits and service retry guidance). Request only artifact/work-request identifiers, lifecycle and validation/publication status, and relevant error indicators. Report meaningful status changes; keep the publisher informed during longer waits without repeating unchanged output. Expand error or work-request details on failure or when progress needs diagnosis. If processing remains underway after about five minutes, return the created artifact link and pending status without implying readiness. On failure, report the actual error/work request and next action. After a timeout or lost response, inspect artifacts/work requests before retrying creation. Stop if the outcome cannot be established instead of risking duplicates.
