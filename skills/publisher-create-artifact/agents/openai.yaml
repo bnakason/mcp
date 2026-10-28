@@ -1,4 +1,4 @@
 interface:
   display_name: "Publisher Artifact Creator"
-  short_description: "Create Publisher image, Helm, and Terraform artifacts"
-  default_prompt: "Use $publisher-create-artifact to verify my image, Helm chart, or Terraform stack and create its artifact in the Marketplace Publisher Console, then recommend a listing type with a terms reminder."
+  short_description: "Create OCI image, container, Helm, and stack artifacts"
+  default_prompt: "Use $publisher-create-artifact to prepare or create a Marketplace Publisher artifact from my Compute image, container image, Helm chart, or Terraform stack."
